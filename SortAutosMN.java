@@ -32,100 +32,6 @@ import java.io.*;
  * @description Parent class for the autos
  ***********************************************************************************************/
 public class SortAutosMN {
-
-    /************************************************************************************************
-     * @name Auto
-     * @category class
-     * @description The class Auto has three private fields: make, model, and year.
-     *              This object will
-     *              be the data element of the node in the binary tree
-     ************************************************************************************************/
-    private static class Auto {
-        private String make;
-        private String model;
-        private int year;
-
-        /*****************************************************************************************
-         * @name Auto
-         * @category method
-         * @description Constructor that initializes the make, model, and year to empty
-         *              strings
-         *              and 0.
-         ****************************************************************************************/
-        public Auto() {
-            this.make = "";
-            this.model = "";
-            this.year = 0;
-        }// end Auto Constructor
-
-        public Auto(String make, String model, int year) {
-            this.make = make;
-            this.model = model;
-            this.year = year;
-        }
-
-        /**
-         * @name setMake
-         * @category method
-         * @param make
-         * @description This is a setter method that sets the make of the car.
-         */
-        public void setMake(String make) {
-            this.make = make;
-        }// end setMake method
-
-        /**
-         * @name getMake
-         * @category method
-         * @return make of the car
-         * @description This is a getter method that returns the make of the car.
-         */
-        public String getMake() {
-            return this.make;
-        }// end getMake method
-
-        /**
-         * @name setModel
-         * @category method
-         * @param model
-         * @description This is a setter method that sets the model of the car.
-         */
-        public void setModel(String model) {
-            this.model = model;
-        }// end setModel method
-
-        /**
-         * @name getModel
-         * @category method
-         * @return model of the car.
-         * @description This function returns the model of the car
-         */
-        public String getModel() {
-            return this.model;
-        }// end getModel method
-
-        /**
-         * @name setYear
-         * @category method
-         * @param year
-         * @description This is a setter method that sets the year of the car.
-         */
-        public void setYear(int year) {
-            this.year = year;
-        }// end setYear method
-
-        /**
-         * @name getYear
-         * @category method
-         * @return year of the car
-         * @description This is a getter method that returns the year of the car.
-         */
-        public int getYear() {
-            return this.year;
-        }// end setYear method
-
-    }// end class Auto
-
     /************************************************************************************************
      * @name Tree
      * @category class
@@ -188,12 +94,16 @@ public class SortAutosMN {
          * @description The Node class is a private static class that is used to create
          *              a node object that contains a data
          *              field and a next field
-         */
+         ************************************************************************************************/
         private static class Node {
-            private Auto vehicle; // object containing three data fields(make, model, year)
-            private Node leftPtr;
-            private Node rightPtr;
-
+            private String make;
+            private String model;
+            private int year;
+            private Node makePtr;   // pointer to make subtrees
+            private Node lPtr;
+            private Node rPtr;
+            
+            
             /************************************************************************************************
              * @name Node
              * @category constructor
@@ -202,80 +112,142 @@ public class SortAutosMN {
              *              the left and right pointers to null.
              ************************************************************************************************/
             public Node() {
-                this.vehicle = new Auto(); // allocate memory for vehicle object and initialize with
-                                           // - the default vehicle constructor
-                this.leftPtr = null;
-                this.rightPtr = null;
+                this.make = "";
+                this.model = "";
+                this.year = 0;
+                this.makePtr = null;
+                this.lPtr = null;
+                this.rPtr = null;
+                
             }// end Node default constructor
-
+            
             /************************************************************************************************
-             * @name setVehicle
-             * @category method
-             * @param model
-             * @param make
-             * @param year
-             * @description A setter method that sets the make, model, and year of the car.
+             * @name Node
+             * @category parameterized constructor
+             * @description A constructor that initializes the node with the make, model, and year.
              ************************************************************************************************/
-            public void setVehicle(String model, String make, int year) {
-                this.vehicle.setMake(make);
-                this.vehicle.setModel(model);
-                this.vehicle.setYear(year);
-            }// end setVehicle method
-
+            public Node(String make, String model, int year, Node makePtr, Node lPtr, Node rPtr){
+                this.make = make;
+                this.model = model;
+                this.year = year;
+                this.makePtr = makePtr;
+                this.lPtr = lPtr;
+                this.rPtr = rPtr;
+                
+            }// end of parameterized constructor 
+            
             /************************************************************************************************
-             * @name getVehicle
-             * @category method
-             * @return this.vehicle
-             * @description A getter method that returns the vehicle object.
+             * @name getMake()
+             * @return make The make of the car
              ************************************************************************************************/
-            public Auto getVehicle() {
-                return this.vehicle;
-            }// end getModel method
+            public String getMake() {
+                return make;
+            }// end of getMake()
+            
+            /************************************************************************************************
+             * @name setMake
+             * @param make the make of the car
+             * @description set the make of the car
+             ************************************************************************************************/
+            public void setMake(String make) {
+                this.make = make;
+            } // end of setMake()
+            
+            /************************************************************************************************
+             * @name getModel
+             * @return model the model name of the car
+             ************************************************************************************************/
+            public String getModel() {
+                return model;
+            }// end of getModel()
+            
+            /************************************************************************************************
+             * @name setModel
+             * @param model The name of the model to use.
+             * @description This function sets the model of the car
+             ************************************************************************************************/
+            public void setModel(String model) {
+                this.model = model;
+            }// end of setModel
+           
+            /************************************************************************************************
+             * @name getYear
+             * @return the year of the car
+             ************************************************************************************************/
+            public int getYear() {
+                return year;
+            }// end of getYear
+            
+            /************************************************************************************************
+             * @name setYear
+             * @param year The year
+             * @description This function sets the year of the car
+             ************************************************************************************************/
+            public void setYear(int year) {
+                this.year = year;
+            }// end of setYear
+
 
             /************************************************************************************************
-             * @name setLeftPtr
+             * @name getMakePtr
+             * @return makePtr of the car
+             ************************************************************************************************/
+            public Node getMakePtr() {
+                return makePtr;
+            }// emd of getMakePtr
+
+            /************************************************************************************************
+             * @name setMakePtr
+             * @param makePtr pointer to the make of the car
+             * @description set the pointer to the make of the car
+             ************************************************************************************************/
+            public void setMakePtr(Node makePtr) {
+                this.makePtr = makePtr;
+            }// end of setMakePtr
+            
+            /************************************************************************************************
+             * @name setLPtr
              * @category method
              * @param node
              * @description A setter method that sets the left pointer of the node to the
              *              node passed in as a
              *              parameter.
              ************************************************************************************************/
-            public void setLeftPtr(Node node) {
-                this.leftPtr = node;
+            public void setLPtr(Node node) {
+                this.lPtr = node;
             }// end setLeftPtr method
-
+            
             /************************************************************************************************
-             * @name getLeftPtr
+             * @name getLptr
              * @category method
-             * @return this.leftPtr
+             * @return this.Lptr
              * @description This is a getter method that returns the left pointer of the
              *              node.
              ************************************************************************************************/
-            public Node getLeftPtr() {
-                return this.leftPtr;
+            public Node getLptr() {
+                return this.lPtr;
             }// end getLeftPtr method
 
             /************************************************************************************************
-             * @name setRightPtr
+             * @name setRPtr
              * @category method
              * @param node
              * @description This is a setter method that sets the right pointer of the node
              *              to the node passed in as a parameter.
              ************************************************************************************************/  
-            public void setRightPtr(Node node) {
-                this.rightPtr = node;
-            }// end setRightPtr method
+            public void setRPtr(Node node) {
+                this.rPtr = node;
+            }// end setRPtr method
 
             /************************************************************************************************
-             * @name getRightPtr
+             * @name getRPtr
              * @category method
-             * @return this.rightPtr
+             * @return this.rPtr
              * @description This is a getter method that returns the right pointer of the
              *              node.
-             *****************************************************  
-             *******************************************/
-            public Node getRightPtr() {
-                return this.rightPtr;
+             ************************************************************************************************/
+            public Node getRPtr() {
+                return this.rPtr;
             }// end getRightPtr method
 
         }// end class Node
@@ -292,7 +264,7 @@ public class SortAutosMN {
     public static void main(String[] args) {
 
         // Instantiate a new Tree
-        Tree
+        Tree myTree = new Tree();
 
     }// end main(String[] args)
 
