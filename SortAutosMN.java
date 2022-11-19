@@ -39,55 +39,8 @@ public class SortAutosMN {
      ************************************************************************************************/
     private static class Tree {
         private Node root;
-
-        /************************************************************************************************
-         * @name insertData
-         * @category method
-         * @param root the root node of the tree
-         * @param data the Auto object with values for make, model, year
-         * @return root node of the tree
-         * @description A recursive method that inserts data into the tree.
-         ************************************************************************************************/
-        public Node insertData(Node root, Auto data) {
-
-            // if the root is null, then create a new root and populate with the data
-            if (root == null) {
-                root = new Node();
-                root.vehicle.setMake(data.make);
-                root.vehicle.setModel(data.model);
-                root.vehicle.setYear(data.year);
-                return root;
-            } // end if(root == null)
-
-            // compare to see if the make of the vehicle is less than or equal to the make
-            // of the new vehicle lexicographically
-            if (root.vehicle.getMake().compareTo(data.getMake()) <= 0) {
-                // make recursive call to traverse down left side of tree
-                root.setLeftPtr(insertData(root.leftPtr, data));
-                return root;
-
-            } // end if(root.vehicle.getMake().compareTo(data.getMake()) <= 0)
-            else if(root.vehicle.getMake().compareTo(data.getMake()) > 0){
-                // make recursive call to traverse down right side of tree
-                root.setRightPtr(insertData(root.rightPtr, data));
-                return root;
-
-            }// end if(root.vehicle.getMake().compareTo(data.getMake()) > 0)
-
-            return root;
-        }// end insertData method
-
-        /************************************************************************************************
-         * @name add
-         * @category method
-         * @param data
-         * @description The add method to start the recursive function call of the
-         *              insertData method above
-         ************************************************************************************************/
-        public void add(Auto data) {
-            root = insertData(root, data);
-        }// end add method
-
+        
+        
         /************************************************************************************************
          * @name Node
          * @category class
@@ -96,13 +49,15 @@ public class SortAutosMN {
          *              field and a next field
          ************************************************************************************************/
         private static class Node {
+            private int makeCnt;    // stores count of make
+            private int modelCnt;   // stores count of model
+            private int yearCnt;    // stores count of year
+            private int year;
             private String make;
             private String model;
-            private int year;
             private Node makePtr;   // pointer to make subtrees
             private Node lPtr;
             private Node rPtr;
-            
             
             /************************************************************************************************
              * @name Node
@@ -112,9 +67,12 @@ public class SortAutosMN {
              *              the left and right pointers to null.
              ************************************************************************************************/
             public Node() {
+                this.makeCnt = 0;
+                this.modelCnt = 0;
+                this.yearCnt = 0;
+                this.year = 0;
                 this.make = "";
                 this.model = "";
-                this.year = 0;
                 this.makePtr = null;
                 this.lPtr = null;
                 this.rPtr = null;
@@ -126,15 +84,62 @@ public class SortAutosMN {
              * @category parameterized constructor
              * @description A constructor that initializes the node with the make, model, and year.
              ************************************************************************************************/
-            public Node(String make, String model, int year, Node makePtr, Node lPtr, Node rPtr){
+            public Node(int makeCnt, int modelCnt, int yearCnt, int year, String make, String model, Node makePtr, Node lPtr, Node rPtr){
+                this.makeCnt = makeCnt;
+                this.modelCnt = modelCnt;
+                this.yearCnt = yearCnt;
+                this.year = year;
                 this.make = make;
                 this.model = model;
-                this.year = year;
                 this.makePtr = makePtr;
                 this.lPtr = lPtr;
                 this.rPtr = rPtr;
                 
             }// end of parameterized constructor 
+            
+            /************************************************************************************************
+             * @name getMakeCnt
+             * @return makeCnt the total number of same models found in the tree
+             ************************************************************************************************/ 
+            public int getMakeCnt() {
+                return makeCnt;
+            }// end of getMakeCnt
+            
+            
+            /************************************************************************************************
+             * @name getModelCnt
+             * @return modelCnt the total number of same models in the tree
+             ************************************************************************************************/
+            public int getModelCnt() {
+                return modelCnt;
+            }// end of getModelCnt
+            
+            
+            /************************************************************************************************
+             * @name getYearCnt
+             * @return yearCnt the total number of same years found in the tree
+             * @description This function returns the number of times the make function has been called
+             ************************************************************************************************/
+            public int getYearCnt(){
+                return yearCnt;
+            }// end of getYearCnt
+            
+             /************************************************************************************************
+              * @name getYear
+              * @return the year of the car
+              ************************************************************************************************/
+             public int getYear() {
+                 return year;
+             }// end of getYear
+             
+             /************************************************************************************************
+              * @name setYear
+              * @param year The year
+              * @description This function sets the year of the car
+              ************************************************************************************************/
+             public void setYear(int year) {
+                 this.year = year;
+             }// end of setYear
             
             /************************************************************************************************
              * @name getMake()
@@ -169,24 +174,6 @@ public class SortAutosMN {
             public void setModel(String model) {
                 this.model = model;
             }// end of setModel
-           
-            /************************************************************************************************
-             * @name getYear
-             * @return the year of the car
-             ************************************************************************************************/
-            public int getYear() {
-                return year;
-            }// end of getYear
-            
-            /************************************************************************************************
-             * @name setYear
-             * @param year The year
-             * @description This function sets the year of the car
-             ************************************************************************************************/
-            public void setYear(int year) {
-                this.year = year;
-            }// end of setYear
-
 
             /************************************************************************************************
              * @name getMakePtr
@@ -204,7 +191,7 @@ public class SortAutosMN {
             public void setMakePtr(Node makePtr) {
                 this.makePtr = makePtr;
             }// end of setMakePtr
-            
+
             /************************************************************************************************
              * @name setLPtr
              * @category method
