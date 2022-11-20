@@ -3,5 +3,8 @@
     "docwriter.progress.trackMethods": false,
     "docwriter.progress.trackClasses": false,
     "docwriter.progress.trackTypes": true,
-    "docwriter.progress.trackFunctions": true
+    "docwriter.progress.trackFunctions": true,
+    "cSpell.words": [
+        "Silverado"
+    ]
 }

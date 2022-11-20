@@ -39,9 +39,10 @@ public class SortAutosMN {
      ************************************************************************************************/
     private static class Tree {
         private Node root;
-
+        
+        
         public Tree() {
-            root = null;
+            root = new Node();
         }
 
         /************************************************************************************************
@@ -63,7 +64,7 @@ public class SortAutosMN {
             private Node makePtr; // pointer to make subtrees
             private Node lPtr;
             private Node rPtr;
-
+            
             /************************************************************************************************
              * @name Node (AVL)
              * @category constructor
@@ -72,9 +73,9 @@ public class SortAutosMN {
              *              the left and right pointers to null.
              ************************************************************************************************/
             public Node() {
-                this.makeCnt = 0;
-                this.modelCnt = 0;
-                this.yearCnt = 0;
+                SortAutosMN.Tree.Node.makeCnt = 0;
+                SortAutosMN.Tree.Node.modelCnt = 0;
+                SortAutosMN.Tree.Node.yearCnt = 0;
                 this.year = 0;
                 this.height = 0;
                 this.count = 0;
@@ -83,9 +84,34 @@ public class SortAutosMN {
                 this.makePtr = null;
                 this.lPtr = null;
                 this.rPtr = null;
-
+                
             }// end Node default constructor
-
+            
+            /***********************************************************************************************
+             * @name Node (AVL)
+             * @param year
+             * @param make
+             * @param model
+             * @category constructor
+             * @description This is a constructor for the Node class. It is initializing the
+             *              variables year, make, and model. This is the constructor for the
+             *              Node class. It is setting the values of the instance variables
+             *              to the values passed in as parameters.
+             ************************************************************************************************/
+            public Node(int year, String make, String model) {
+                this.year = year;
+                this.height = 0;
+                this.make = make;
+                this.model = model;
+                this.makePtr = null;
+                this.lPtr = null;
+                this.rPtr = null;
+                
+                // increment the count to make it greater than 0 to indicate tree is not empty
+                this.count++;
+                
+            }// end of parameterized constructor
+            
             /************************************************************************************************
              * @name height
              * @param node the node to be checked
@@ -98,7 +124,7 @@ public class SortAutosMN {
                 }
                 return node.getHeight();
             }// end of getHeight
-
+            
             /************************************************************************************************
              * @name max
              * @param x The first number to compare
@@ -115,7 +141,7 @@ public class SortAutosMN {
                     return y;
                 } // end else
             }// end of max
-
+            
             /************************************************************************************************
              * 
              * @param year  the year of the car
@@ -128,17 +154,17 @@ public class SortAutosMN {
              *              to null
              ************************************************************************************************/
             public Node newAvlNode(int year, String make, String model) {
-                Node avlNode = new Node();
-                avlNode.year = year;
+
+                Node avlNode = new Node(year, make, model);
                 avlNode.setLPtr(null);
                 avlNode.setRPtr(null);
                 avlNode.setMakePtr(null);
                 avlNode.height = 1;
                 avlNode.count = 1;
 
-                return avlNode;
+            return avlNode;
             }// end of newAvlNode
-
+            
             /*************************************************************************************************
              * @name rotateRight
              * @param r1 the root of the tree
@@ -148,22 +174,22 @@ public class SortAutosMN {
              *              becomes the left child of the new root node
              */
             public Node rotateRight(Node r1) {
-                Node r2 = r1.getLptr();
+                Node r2 = r1.getLPtr();
                 Node subT2 = r2.getRPtr();
-
+                
                 // starting the first rotation of tree
                 r2.setRPtr(r1);
                 r1.setLPtr(subT2);
-
+                
                 // perform update of the new height after the rotation
-                r1.setHeight(max(height(r1.getLptr()), height(r1.getRPtr()) + 1));
-                r2.setHeight(max(height(r2.getLptr()), height(r2.getRPtr()) + 1));
-
+                r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
+                r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
+                
                 // pass back new root after the rotation
                 return r2;
-
+                
             }// end of rotateRight
-
+            
             /*************************************************************************************************
              * @name rotateLeft
              * @param r2 the root of the tree
@@ -174,38 +200,23 @@ public class SortAutosMN {
              */
             public Node rotateLeft(Node r2) {
                 Node r1 = r2.getRPtr();
-                Node subT2 = r1.getLptr();
-
+                Node subT2 = r1.getLPtr();
+                
                 // starting the first rotation of tree
                 r1.setLPtr(r2);
                 r2.setRPtr(subT2);
-
+                
                 // perform update of the new height after the rotation
-                r2.setHeight(max(height(r2.getLptr()), height(r2.getRPtr()) + 1));
-                r1.setHeight(max(height(r1.getLptr()), height(r1.getRPtr()) + 1));
-
+                r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
+                r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
+                
                 // pass back new root after the rotation
-                return r2;
-
+                return r1;
+                
             }// end of rotateRight
-
-            /************************************************************************************************
-             * @name Node
-             * @category parameterized constructor
-             * @description A constructor that initializes the node with the make, model,
-             *              and year.
-             ************************************************************************************************/
-            public Node(int year, String make, String model, Node makePtr, Node lPtr, Node rPtr) {
-                this.year = year;
-                this.height = 0;
-                this.make = make;
-                this.model = model;
-                this.makePtr = makePtr;
-                this.lPtr = lPtr;
-                this.rPtr = rPtr;
-
-            }// end of parameterized constructor
-
+            
+            
+            
             /************************************************************************************************
              * @name getMakeCnt
              * @return makeCnt the total number of same models found in the tree
@@ -213,7 +224,7 @@ public class SortAutosMN {
             public int getMakeCnt() {
                 return makeCnt;
             }// end of getMakeCnt
-
+            
             /************************************************************************************************
              * @name getModelCnt
              * @return modelCnt the total number of same models in the tree
@@ -221,7 +232,7 @@ public class SortAutosMN {
             public int getModelCnt() {
                 return modelCnt;
             }// end of getModelCnt
-
+            
             /************************************************************************************************
              * @name getYearCnt
              * @return yearCnt the total number of same years found in the tree
@@ -231,7 +242,7 @@ public class SortAutosMN {
             public int getYearCnt() {
                 return yearCnt;
             }// end of getYearCnt
-
+            
             /************************************************************************************************
              * @name getYear
              * @return the year of the car
@@ -239,7 +250,7 @@ public class SortAutosMN {
             public int getYear() {
                 return year;
             }// end of getYear
-
+            
             /************************************************************************************************
              * @name setYear
              * @param year The year
@@ -248,7 +259,7 @@ public class SortAutosMN {
             public void setYear(int year) {
                 this.year = year;
             }// end of setYear
-
+            
             /************************************************************************************************
              * @name getHeight
              * @return height the height of the tree
@@ -258,6 +269,16 @@ public class SortAutosMN {
                 return this.height;
             }// end of getHeight
 
+
+            /*************************************************************************************************
+             * @name getCount
+             * @return count number of items in the list.
+             * @description function returns the value of the count variable.
+             ************************************************************************************************/
+            public int getCount() {
+                return this.count;
+            }// end of getCount
+            
             /************************************************************************************************
              * @name setHeight
              * @param height The height of the image in pixels.
@@ -316,8 +337,8 @@ public class SortAutosMN {
              * @param makePtr pointer to the make of the car
              * @description set the pointer to the make of the car
              ************************************************************************************************/
-            public void setMakePtr(Node makePtr) {
-                this.makePtr = makePtr;
+            public void setMakePtr(Node node) {
+                this.makePtr = node.makePtr;
             }// end of setMakePtr
 
             /************************************************************************************************
@@ -329,7 +350,7 @@ public class SortAutosMN {
              *              parameter.
              ************************************************************************************************/
             public void setLPtr(Node node) {
-                this.lPtr = node;
+                this.lPtr = node.lPtr;
             }// end setLeftPtr method
 
             /************************************************************************************************
@@ -339,7 +360,7 @@ public class SortAutosMN {
              * @description This is a getter method that returns the left pointer of the
              *              node.
              ************************************************************************************************/
-            public Node getLptr() {
+            public Node getLPtr() {
                 return this.lPtr;
             }// end getLeftPtr method
 
@@ -351,7 +372,7 @@ public class SortAutosMN {
              *              to the node passed in as a parameter.
              ************************************************************************************************/
             public void setRPtr(Node node) {
-                this.rPtr = node;
+                this.rPtr = node.rPtr;
             }// end setRPtr method
 
             /************************************************************************************************
@@ -380,7 +401,7 @@ public class SortAutosMN {
                 return 0;
             } // end if
             else {
-                return root.height(node.getLptr()) - root.height(node.getRPtr());
+                return node.height(node.getLPtr()) - node.height(node.getRPtr());
             } // end else
 
         }// end of balance
@@ -398,30 +419,30 @@ public class SortAutosMN {
             // check for empty node
             if (node == null) {
                 // return new node with car info
-                return root.newAvlNode(year, make, model);
+                return  node.newAvlNode(year, make, model);
             } // end if
 
             // Start to compare values in the node and traverse down the tree
             if (make.compareTo(node.getMake()) <= 0) {
-                // if the make already exists in the tree then increment count of makeCnt, send to compare function
-                if(autoCompare(node)){
+                // if the make already exists in the tree then increment count of makeCnt, send
+                // to compare function
+                if (autoCompare(node)) {
                     return node;
                 }
-                node.setLPtr(insert(node.getLptr(), make, model, year));
-            }// end if(make.compareTo(node.getMake()) <= 0)
-            else if(make.compareTo(node.getMake()) > 0){
-                // if the make already exists in the tree then increment count of makeCnt, send to compare function
-                if(autoCompare(node)){
+                node.setLPtr(insert(node.getLPtr(), make, model, year));
+            } // end if(make.compareTo(node.getMake()) <= 0)
+            else{
+                // if the make already exists in the tree then increment count of makeCnt, send
+                // to compare function
+                if (autoCompare(node)) {
                     return node;
                 }
                 node.setRPtr(insert(node.getRPtr(), make, model, year));
-            }// end else
-            else {
-                return node;
-            }
+            } // end else
+          
 
             // update the height of the nodes of ancestors
-            node.setHeight(1 + root.max(root.height(node.getLptr()), root.height(node.getRPtr())));
+            node.setHeight(1 + node.max(node.height(node.getLPtr()), node.height(node.getRPtr())));
 
             // get the balance factor of the node
             int balance = balance(node);
@@ -429,45 +450,46 @@ public class SortAutosMN {
             // if the node is unbalanced then there are 4 cases
 
             // left left case
-            if(balance > 1 && make.compareTo(node.getLptr().getMake()) < 0){
-                return root.rotateRight(node);
-            }// end left left case
+            if (balance > 1 && make.compareTo(node.getLPtr().getMake()) < 0) {
+                return node.rotateRight(node);
+            } // end left left case
 
             // right right case
-            if(balance < -1 && make.compareTo(node.getRPtr().getMake()) > 0){
-                return root.rotateLeft(node);
-            }// end right right case
+            if (balance < -1 && make.compareTo(node.getRPtr().getMake()) > 0) {
+                return node.rotateLeft(node);
+            } // end right right case
 
             // left right case
-            if(balance > 1 && make.compareTo(node.getLptr().getMake()) > 0){
-                node.setLPtr(root.rotateLeft(node.getLptr()));
-                return root.rotateRight(node);
-            }// end left right case
+            if (balance > 1 && make.compareTo(node.getLPtr().getMake()) > 0) {
+                node.setLPtr(node.rotateLeft(node.getLPtr()));
+                return node.rotateRight(node);
+            } // end left right case
 
             // right left case
-            if(balance < -1 && make.compareTo(node.getRPtr().getMake()) < 0){
-                node.setRPtr(root.rotateRight(node.getRPtr()));
-                return root.rotateLeft(node);
-            }// end right left case
+            if (balance < -1 && make.compareTo(node.getRPtr().getMake()) < 0) {
+                node.setRPtr(node.rotateRight(node.getRPtr()));
+                return node.rotateLeft(node);
+            } // end right left case
 
             // return the node
             return node;
-            
+
         }// end insert method
 
-            /************************************************************************************************
-             * @name inOrderPrint
-             * @param node the node that is being passed in
-             * The function takes a node as a parameter and prints the make and makeCnt of the node and all of its children
-             ************************************************************************************************/
-            public void inOrderPrint(Node node){
-                if(node != null){
-                    inOrderPrint(node.getLptr());
-                    System.out.println(node.getMake() + " " + node.getMakeCnt());
-                    inOrderPrint(node.getRPtr());
-                }// end if
+        /************************************************************************************************
+         * @name inOrderPrint
+         * @param node the node that is being passed in
+         *             The function takes a node as a parameter and prints the make and
+         *             makeCnt of the node and all of its children
+         ************************************************************************************************/
+        public void inOrderPrint(Node node) {
+            if (node != null) {
+                inOrderPrint(node.getLPtr());
+                System.out.println(node.getMake() + " " + node.getMakeCnt());
+                inOrderPrint(node.getRPtr());
+            } // end if
 
-            }// end inOrderPrint
+        }// end inOrderPrint
 
         /*****************************************************************************************************
          * @name autoCompare
@@ -485,7 +507,8 @@ public class SortAutosMN {
             if (node.make == node.getMake()) {
                 SortAutosMN.Tree.Node.makeCnt++;
 
-                // sets exists flag to true do indicate make exists and for calling function to return.
+                // sets exists flag to true do indicate make exists and for calling function to
+                // return.
                 exists = true;
 
             }
@@ -514,7 +537,17 @@ public class SortAutosMN {
     public static void main(String[] args) {
 
         // Instantiate a new Tree
-        Tree myTree = new Tree();
+        Tree cars = new Tree();
+        cars.root = cars.insert(cars.root, "Ford", "F150", 2010);
+        cars.root = cars.insert(cars.root, "Chevy", "Cruz", 2019);
+        cars.root = cars.insert(cars.root, "Chevy", "Silverado", 2006);
+
+        cars.root = cars.insert(cars.root, "Dodge", "Durango", 2020);
+        cars.root = cars.insert(cars.root, "Dodge", "Ram1500", 2000);
+
+        System.out.println("\nIn order print of the tree\n");
+
+        cars.inOrderPrint(cars.root);
 
     }// end main(String[] args)
 
