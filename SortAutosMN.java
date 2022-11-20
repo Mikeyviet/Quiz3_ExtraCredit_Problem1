@@ -39,10 +39,9 @@ public class SortAutosMN {
      ************************************************************************************************/
     private static class Tree {
         private Node root;
-        
-        
+
         public Tree() {
-            root = new Node();
+            root = null;
         }
 
         /************************************************************************************************
@@ -112,109 +111,6 @@ public class SortAutosMN {
                 
             }// end of parameterized constructor
             
-            /************************************************************************************************
-             * @name height
-             * @param node the node to be checked
-             * @return The height of the node.
-             * @description gets the total height of the tree or subtree
-             ************************************************************************************************/
-            public int height(Node node) {
-                if (node == null) {
-                    return 0;
-                }
-                return node.getHeight();
-            }// end of getHeight
-            
-            /************************************************************************************************
-             * @name max
-             * @param x The first number to compare
-             * @param y The y coordinate of the point.
-             * @return The maximum value between x and y.
-             * @description the function takes two integers as input and returns the larger
-             *              of the two.
-             ************************************************************************************************/
-            public int max(int x, int y) {
-                if (x > y) {
-                    return x;
-                } // end if
-                else {
-                    return y;
-                } // end else
-            }// end of max
-            
-            /************************************************************************************************
-             * 
-             * @param year  the year of the car
-             * @param make  The make of the car
-             * @param model The model of the car
-             * @return A new node with the given year, make, and model.
-             * @description this function that helps in creating memory for new node and
-             *              sets the make, model, and year to the node. It also sets the
-             *              height of the node and count of node to 1. All pointers are set
-             *              to null
-             ************************************************************************************************/
-            public Node newAvlNode(int year, String make, String model) {
-
-                Node avlNode = new Node(year, make, model);
-                avlNode.setLPtr(null);
-                avlNode.setRPtr(null);
-                avlNode.setMakePtr(null);
-                avlNode.height = 1;
-                avlNode.count = 1;
-
-            return avlNode;
-            }// end of newAvlNode
-            
-            /*************************************************************************************************
-             * @name rotateRight
-             * @param r1 the root of the tree
-             * @return The new root of the tree after the rotation.
-             * @description The right child of the root node becomes the new root node, and
-             *              the old root node
-             *              becomes the left child of the new root node
-             */
-            public Node rotateRight(Node r1) {
-                Node r2 = r1.getLPtr();
-                Node subT2 = r2.getRPtr();
-                
-                // starting the first rotation of tree
-                r2.setRPtr(r1);
-                r1.setLPtr(subT2);
-                
-                // perform update of the new height after the rotation
-                r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
-                r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
-                
-                // pass back new root after the rotation
-                return r2;
-                
-            }// end of rotateRight
-            
-            /*************************************************************************************************
-             * @name rotateLeft
-             * @param r2 the root of the tree
-             * @return The new root of the tree after the rotation.
-             * @description The right child of the root node becomes the new root node, and
-             *              the old root node
-             *              becomes the left child of the new root node
-             */
-            public Node rotateLeft(Node r2) {
-                Node r1 = r2.getRPtr();
-                Node subT2 = r1.getLPtr();
-                
-                // starting the first rotation of tree
-                r1.setLPtr(r2);
-                r2.setRPtr(subT2);
-                
-                // perform update of the new height after the rotation
-                r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
-                r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
-                
-                // pass back new root after the rotation
-                return r1;
-                
-            }// end of rotateRight
-            
             
             
             /************************************************************************************************
@@ -268,8 +164,8 @@ public class SortAutosMN {
             public int getHeight() {
                 return this.height;
             }// end of getHeight
-
-
+            
+            
             /*************************************************************************************************
              * @name getCount
              * @return count number of items in the list.
@@ -289,7 +185,7 @@ public class SortAutosMN {
             public void setHeight(int height) {
                 this.height = height;
             }// end of setHeight
-
+            
             /************************************************************************************************
              * @name getMake()
              * @return make The make of the car
@@ -297,7 +193,7 @@ public class SortAutosMN {
             public String getMake() {
                 return make;
             }// end of getMake()
-
+            
             /************************************************************************************************
              * @name setMake
              * @param make the make of the car
@@ -306,7 +202,7 @@ public class SortAutosMN {
             public void setMake(String make) {
                 this.make = make;
             } // end of setMake()
-
+            
             /************************************************************************************************
              * @name getModel
              * @return model the model name of the car
@@ -314,7 +210,7 @@ public class SortAutosMN {
             public String getModel() {
                 return model;
             }// end of getModel()
-
+            
             /************************************************************************************************
              * @name setModel
              * @param model The name of the model to use.
@@ -323,7 +219,7 @@ public class SortAutosMN {
             public void setModel(String model) {
                 this.model = model;
             }// end of setModel
-
+            
             /************************************************************************************************
              * @name getMakePtr
              * @return makePtr of the car
@@ -331,7 +227,7 @@ public class SortAutosMN {
             public Node getMakePtr() {
                 return makePtr;
             }// emd of getMakePtr
-
+            
             /************************************************************************************************
              * @name setMakePtr
              * @param makePtr pointer to the make of the car
@@ -340,7 +236,7 @@ public class SortAutosMN {
             public void setMakePtr(Node node) {
                 this.makePtr = node.makePtr;
             }// end of setMakePtr
-
+            
             /************************************************************************************************
              * @name setLPtr
              * @category method
@@ -352,7 +248,7 @@ public class SortAutosMN {
             public void setLPtr(Node node) {
                 this.lPtr = node.lPtr;
             }// end setLeftPtr method
-
+            
             /************************************************************************************************
              * @name getLptr
              * @category method
@@ -363,7 +259,7 @@ public class SortAutosMN {
             public Node getLPtr() {
                 return this.lPtr;
             }// end getLeftPtr method
-
+            
             /************************************************************************************************
              * @name setRPtr
              * @category method
@@ -374,7 +270,7 @@ public class SortAutosMN {
             public void setRPtr(Node node) {
                 this.rPtr = node.rPtr;
             }// end setRPtr method
-
+            
             /************************************************************************************************
              * @name getRPtr
              * @category method
@@ -385,9 +281,111 @@ public class SortAutosMN {
             public Node getRPtr() {
                 return this.rPtr;
             }// end getRightPtr method
-
+            
         }// end class Node
 
+        /************************************************************************************************
+         * @name height
+         * @param node the node to be checked
+         * @return The height of the node.
+         * @description gets the total height of the tree or subtree
+         ************************************************************************************************/
+        public int height(Node node) {
+            if (node == null) {
+                return 0;
+            }
+            return node.getHeight();
+        }// end of getHeight
+        
+        /************************************************************************************************
+         * @name max
+         * @param x The first number to compare
+         * @param y The y coordinate of the point.
+         * @return The maximum value between x and y.
+         * @description the function takes two integers as input and returns the larger
+         *              of the two.
+         ************************************************************************************************/
+        public int max(int x, int y) {
+            if (x > y) {
+                return x;
+            } // end if
+            else {
+                return y;
+            } // end else
+        }// end of max
+        
+        /************************************************************************************************
+         * 
+         * @param year  the year of the car
+         * @param make  The make of the car
+         * @param model The model of the car
+         * @return A new node with the given year, make, and model.
+         * @description this function that helps in creating memory for new node and
+         *              sets the make, model, and year to the node. It also sets the
+         *              height of the node and count of node to 1. All pointers are set
+         *              to null
+         ************************************************************************************************/
+        public Node newAvlNode(int year, String make, String model) {
+
+            Node avlNode = new Node(year, make, model);
+            avlNode.height = 1;
+            avlNode.count = 1;
+
+            return avlNode;
+            
+        }// end of newAvlNode
+        
+        /*************************************************************************************************
+         * @name rotateRight
+         * @param r1 the root of the tree
+         * @return The new root of the tree after the rotation.
+         * @description The right child of the root node becomes the new root node, and
+         *              the old root node
+         *              becomes the left child of the new root node
+         */
+        public Node rotateRight(Node r1) {
+            Node r2 = r1.getLPtr();
+            Node subT2 = r2.getRPtr();
+            
+            // starting the first rotation of tree
+            r2.setRPtr(r1);
+            r1.setLPtr(subT2);
+            
+            // perform update of the new height after the rotation
+            r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
+            r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
+            
+            // pass back new root after the rotation
+            return r2;
+            
+        }// end of rotateRight
+        
+        /*************************************************************************************************
+         * @name rotateLeft
+         * @param r2 the root of the tree
+         * @return The new root of the tree after the rotation.
+         * @description The right child of the root node becomes the new root node, and
+         *              the old root node
+         *              becomes the left child of the new root node
+         */
+        public Node rotateLeft(Node r2) {
+            Node r1 = r2.getRPtr();
+            Node subT2 = r1.getLPtr();
+            
+            // starting the first rotation of tree
+            r1.setLPtr(r2);
+            r2.setRPtr(subT2);
+            
+            // perform update of the new height after the rotation
+            r2.setHeight(max(height(r2.getLPtr()), height(r2.getRPtr()) + 1));
+            r1.setHeight(max(height(r1.getLPtr()), height(r1.getRPtr()) + 1));
+            
+            // pass back new root after the rotation
+            return r1;
+            
+        }// end of rotateRight
+        
+        
         /*****************************************************************************************************
          * @name balance
          * @param node the node to be balanced
@@ -400,9 +398,8 @@ public class SortAutosMN {
             if (node == null) {
                 return 0;
             } // end if
-            else {
-                return node.height(node.getLPtr()) - node.height(node.getRPtr());
-            } // end else
+
+            return height(node.getLPtr()) - height(node.getRPtr());
 
         }// end of balance
 
@@ -415,64 +412,68 @@ public class SortAutosMN {
          * @return A new node with the car info.
          * @description the function is used to insert the car with info into the tree
          ****************************************************************************************************/
-        public Node insert(Node node, String make, String model, int year) {
+        public Node insert(Node root, String make, String model, int year) {
+
+            
             // check for empty node
-            if (node == null) {
+            if (root == null) {
+                root = newAvlNode(year, make, model);
                 // return new node with car info
-                return  node.newAvlNode(year, make, model);
+                return root;
+
             } // end if
 
             // Start to compare values in the node and traverse down the tree
-            if (make.compareTo(node.getMake()) <= 0) {
+            if (make.compareTo(root.getMake()) <= 0) {
                 // if the make already exists in the tree then increment count of makeCnt, send
                 // to compare function
-                if (autoCompare(node)) {
-                    return node;
+                if (autoCompare(root)) {
+                    return root;
                 }
-                node.setLPtr(insert(node.getLPtr(), make, model, year));
+                root.setLPtr(insert(root.getLPtr(), make, model, year));
             } // end if(make.compareTo(node.getMake()) <= 0)
             else{
                 // if the make already exists in the tree then increment count of makeCnt, send
                 // to compare function
-                if (autoCompare(node)) {
-                    return node;
+                if (autoCompare(root)) {
+                    return root;
                 }
-                node.setRPtr(insert(node.getRPtr(), make, model, year));
+                root.setRPtr(insert(root.getRPtr(), make, model, year));
             } // end else
           
 
             // update the height of the nodes of ancestors
-            node.setHeight(1 + node.max(node.height(node.getLPtr()), node.height(node.getRPtr())));
+            root.setHeight(1 + max(height(root.getLPtr()), height(root.getRPtr())));
 
             // get the balance factor of the node
-            int balance = balance(node);
+            int balance = balance(root);
 
             // if the node is unbalanced then there are 4 cases
 
             // left left case
-            if (balance > 1 && make.compareTo(node.getLPtr().getMake()) < 0) {
-                return node.rotateRight(node);
+            if (balance > 1 && make.compareTo(root.getLPtr().getMake()) < 0) {
+                return rotateRight(root);
             } // end left left case
 
             // right right case
-            if (balance < -1 && make.compareTo(node.getRPtr().getMake()) > 0) {
-                return node.rotateLeft(node);
+            if (balance < -1 && make.compareTo(root.getRPtr().getMake()) > 0) {
+                return rotateLeft(root);
             } // end right right case
 
             // left right case
-            if (balance > 1 && make.compareTo(node.getLPtr().getMake()) > 0) {
-                node.setLPtr(node.rotateLeft(node.getLPtr()));
-                return node.rotateRight(node);
+            if (balance > 1 && make.compareTo(root.getLPtr().getMake()) > 0) {
+                root.setLPtr(rotateLeft(root.getLPtr()));
+                return rotateRight(root);
             } // end left right case
 
             // right left case
-            if (balance < -1 && make.compareTo(node.getRPtr().getMake()) < 0) {
-                node.setRPtr(node.rotateRight(node.getRPtr()));
-                return node.rotateLeft(node);
+            if (balance < -1 && make.compareTo(root.getRPtr().getMake()) < 0) {
+                root.setRPtr(rotateRight(root.getRPtr()));
+                return rotateLeft(root);
             } // end right left case
 
             // return the node
-            return node;
+            return root;
 
         }// end insert method
 
@@ -482,11 +483,11 @@ public class SortAutosMN {
          *             The function takes a node as a parameter and prints the make and
          *             makeCnt of the node and all of its children
          ************************************************************************************************/
-        public void inOrderPrint(Node node) {
-            if (node != null) {
-                inOrderPrint(node.getLPtr());
-                System.out.println(node.getMake() + " " + node.getMakeCnt());
-                inOrderPrint(node.getRPtr());
+        public void inOrderPrint(Node root) {
+            if (root != null) {
+                inOrderPrint(root.getLPtr());
+                System.out.println(root.getMake() + " " + root.getMakeCnt());
+                inOrderPrint(root.getRPtr());
             } // end if
 
         }// end inOrderPrint
