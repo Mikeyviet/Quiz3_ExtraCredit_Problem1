@@ -39,8 +39,11 @@ public class SortAutosMN {
      ************************************************************************************************/
     private static class Tree {
         private Node root;
-        
-        
+
+        public Tree() {
+            root = null;
+        }
+
         /************************************************************************************************
          * @name Node
          * @category class
@@ -48,19 +51,21 @@ public class SortAutosMN {
          *              a node object that contains a data
          *              field and a next field
          ************************************************************************************************/
-        private static class Node {
-            private int makeCnt;    // stores count of make
-            private int modelCnt;   // stores count of model
-            private int yearCnt;    // stores count of year
+        private class Node {
+            private static int makeCnt; // stores count of make
+            private static int modelCnt; // stores count of model
+            private static int yearCnt; // stores count of year
             private int year;
+            private int height; // stores count of height
+            private int count; // stores count of count
             private String make;
             private String model;
-            private Node makePtr;   // pointer to make subtrees
+            private Node makePtr; // pointer to make subtrees
             private Node lPtr;
             private Node rPtr;
-            
+
             /************************************************************************************************
-             * @name Node
+             * @name Node (AVL)
              * @category constructor
              * @description A constructor that initializes the vehicle object with the
              *              default constructor and sets
@@ -71,41 +76,144 @@ public class SortAutosMN {
                 this.modelCnt = 0;
                 this.yearCnt = 0;
                 this.year = 0;
+                this.height = 0;
+                this.count = 0;
                 this.make = "";
                 this.model = "";
                 this.makePtr = null;
                 this.lPtr = null;
                 this.rPtr = null;
-                
+
             }// end Node default constructor
-            
+
+            /************************************************************************************************
+             * @name height
+             * @param node the node to be checked
+             * @return The height of the node.
+             * @description gets the total height of the tree or subtree
+             ************************************************************************************************/
+            public int height(Node node) {
+                if (node == null) {
+                    return 0;
+                }
+                return node.getHeight();
+            }// end of getHeight
+
+            /************************************************************************************************
+             * @name max
+             * @param x The first number to compare
+             * @param y The y coordinate of the point.
+             * @return The maximum value between x and y.
+             * @description the function takes two integers as input and returns the larger
+             *              of the two.
+             ************************************************************************************************/
+            public int max(int x, int y) {
+                if (x > y) {
+                    return x;
+                } // end if
+                else {
+                    return y;
+                } // end else
+            }// end of max
+
+            /************************************************************************************************
+             * 
+             * @param year  the year of the car
+             * @param make  The make of the car
+             * @param model The model of the car
+             * @return A new node with the given year, make, and model.
+             * @description this function that helps in creating memory for new node and
+             *              sets the make, model, and year to the node. It also sets the
+             *              height of the node and count of node to 1. All pointers are set
+             *              to null
+             ************************************************************************************************/
+            public Node newAvlNode(int year, String make, String model) {
+                Node avlNode = new Node();
+                avlNode.year = year;
+                avlNode.setLPtr(null);
+                avlNode.setRPtr(null);
+                avlNode.setMakePtr(null);
+                avlNode.height = 1;
+                avlNode.count = 1;
+
+                return avlNode;
+            }// end of newAvlNode
+
+            /*************************************************************************************************
+             * @name rotateRight
+             * @param r1 the root of the tree
+             * @return The new root of the tree after the rotation.
+             * @description The right child of the root node becomes the new root node, and
+             *              the old root node
+             *              becomes the left child of the new root node
+             */
+            public Node rotateRight(Node r1) {
+                Node r2 = r1.getLptr();
+                Node subT2 = r2.getRPtr();
+
+                // starting the first rotation of tree
+                r2.setRPtr(r1);
+                r1.setLPtr(subT2);
+
+                // perform update of the new height after the rotation
+                r1.setHeight(max(height(r1.getLptr()), height(r1.getRPtr()) + 1));
+                r2.setHeight(max(height(r2.getLptr()), height(r2.getRPtr()) + 1));
+
+                // pass back new root after the rotation
+                return r2;
+
+            }// end of rotateRight
+
+            /*************************************************************************************************
+             * @name rotateLeft
+             * @param r2 the root of the tree
+             * @return The new root of the tree after the rotation.
+             * @description The right child of the root node becomes the new root node, and
+             *              the old root node
+             *              becomes the left child of the new root node
+             */
+            public Node rotateLeft(Node r2) {
+                Node r1 = r2.getRPtr();
+                Node subT2 = r1.getLptr();
+
+                // starting the first rotation of tree
+                r1.setLPtr(r2);
+                r2.setRPtr(subT2);
+
+                // perform update of the new height after the rotation
+                r2.setHeight(max(height(r2.getLptr()), height(r2.getRPtr()) + 1));
+                r1.setHeight(max(height(r1.getLptr()), height(r1.getRPtr()) + 1));
+
+                // pass back new root after the rotation
+                return r2;
+
+            }// end of rotateRight
+
             /************************************************************************************************
              * @name Node
              * @category parameterized constructor
-             * @description A constructor that initializes the node with the make, model, and year.
+             * @description A constructor that initializes the node with the make, model,
+             *              and year.
              ************************************************************************************************/
-            public Node(int makeCnt, int modelCnt, int yearCnt, int year, String make, String model, Node makePtr, Node lPtr, Node rPtr){
-                this.makeCnt = makeCnt;
-                this.modelCnt = modelCnt;
-                this.yearCnt = yearCnt;
+            public Node(int year, String make, String model, Node makePtr, Node lPtr, Node rPtr) {
                 this.year = year;
+                this.height = 0;
                 this.make = make;
                 this.model = model;
                 this.makePtr = makePtr;
                 this.lPtr = lPtr;
                 this.rPtr = rPtr;
-                
-            }// end of parameterized constructor 
-            
+
+            }// end of parameterized constructor
+
             /************************************************************************************************
              * @name getMakeCnt
              * @return makeCnt the total number of same models found in the tree
-             ************************************************************************************************/ 
+             ************************************************************************************************/
             public int getMakeCnt() {
                 return makeCnt;
             }// end of getMakeCnt
-            
-            
+
             /************************************************************************************************
              * @name getModelCnt
              * @return modelCnt the total number of same models in the tree
@@ -113,34 +221,54 @@ public class SortAutosMN {
             public int getModelCnt() {
                 return modelCnt;
             }// end of getModelCnt
-            
-            
+
             /************************************************************************************************
              * @name getYearCnt
              * @return yearCnt the total number of same years found in the tree
-             * @description This function returns the number of times the make function has been called
+             * @description This function returns the number of times the make function has
+             *              been called
              ************************************************************************************************/
-            public int getYearCnt(){
+            public int getYearCnt() {
                 return yearCnt;
             }// end of getYearCnt
-            
-             /************************************************************************************************
-              * @name getYear
-              * @return the year of the car
-              ************************************************************************************************/
-             public int getYear() {
-                 return year;
-             }// end of getYear
-             
-             /************************************************************************************************
-              * @name setYear
-              * @param year The year
-              * @description This function sets the year of the car
-              ************************************************************************************************/
-             public void setYear(int year) {
-                 this.year = year;
-             }// end of setYear
-            
+
+            /************************************************************************************************
+             * @name getYear
+             * @return the year of the car
+             ************************************************************************************************/
+            public int getYear() {
+                return year;
+            }// end of getYear
+
+            /************************************************************************************************
+             * @name setYear
+             * @param year The year
+             * @description This function sets the year of the car
+             ************************************************************************************************/
+            public void setYear(int year) {
+                this.year = year;
+            }// end of setYear
+
+            /************************************************************************************************
+             * @name getHeight
+             * @return height the height of the tree
+             * @description this function returns the height of the trees
+             ************************************************************************************************/
+            public int getHeight() {
+                return this.height;
+            }// end of getHeight
+
+            /************************************************************************************************
+             * @name setHeight
+             * @param height The height of the image in pixels.
+             * @description this function sets the height of the rectangle to the value of
+             *              the parameter
+             *              height.
+             ************************************************************************************************/
+            public void setHeight(int height) {
+                this.height = height;
+            }// end of setHeight
+
             /************************************************************************************************
              * @name getMake()
              * @return make The make of the car
@@ -148,7 +276,7 @@ public class SortAutosMN {
             public String getMake() {
                 return make;
             }// end of getMake()
-            
+
             /************************************************************************************************
              * @name setMake
              * @param make the make of the car
@@ -157,7 +285,7 @@ public class SortAutosMN {
             public void setMake(String make) {
                 this.make = make;
             } // end of setMake()
-            
+
             /************************************************************************************************
              * @name getModel
              * @return model the model name of the car
@@ -165,7 +293,7 @@ public class SortAutosMN {
             public String getModel() {
                 return model;
             }// end of getModel()
-            
+
             /************************************************************************************************
              * @name setModel
              * @param model The name of the model to use.
@@ -203,7 +331,7 @@ public class SortAutosMN {
             public void setLPtr(Node node) {
                 this.lPtr = node;
             }// end setLeftPtr method
-            
+
             /************************************************************************************************
              * @name getLptr
              * @category method
@@ -221,7 +349,7 @@ public class SortAutosMN {
              * @param node
              * @description This is a setter method that sets the right pointer of the node
              *              to the node passed in as a parameter.
-             ************************************************************************************************/  
+             ************************************************************************************************/
             public void setRPtr(Node node) {
                 this.rPtr = node;
             }// end setRPtr method
@@ -238,6 +366,92 @@ public class SortAutosMN {
             }// end getRightPtr method
 
         }// end class Node
+
+        /*****************************************************************************************************
+         * @name balance
+         * @param node the node to be balanced
+         * @return The height of the left subtree minus the height of the right subtree.
+         * @description this function returns the difference between the height of the
+         *              left subtree and the
+         *              height of the right subtree
+         ****************************************************************************************************/
+        public int balance(Node node) {
+            if (node == null) {
+                return 0;
+            } // end if
+            else {
+                return root.height(node.getLptr()) - root.height(node.getRPtr());
+            } // end else
+
+        }// end of balance
+
+        /*****************************************************************************************************
+         * @name insert
+         * @param node  the node to insert the car into
+         * @param make  the make of the car
+         * @param model The model of the car
+         * @param year  the year of the car
+         * @return A new node with the car info.
+         * @description the function is used to insert the car with info into the tree
+         ****************************************************************************************************/
+        public Node insert(Node node, String make, String model, int year) {
+            // check for empty node
+            if (node == null) {
+                // return new node with car info
+                return root.newAvlNode(year, make, model);
+            } // end if
+
+            // Start to compare values in the node and traverse down the tree
+            if (make.compareTo(node.getMake()) <= 0) {
+                // if the make already exists in the tree then increment count of makeCnt, send to compare function
+                if(autoCompare(node)){
+                    return node;
+                }
+                node.setLPtr(insert(node.getLptr(), make, model, year));
+            }// end if(make.compareTo(node.getMake()) <= 0)
+            else{
+                // if the make already exists in the tree then increment count of makeCnt, send to compare function
+                if(autoCompare(node)){
+                    return node;
+                }
+                node.setRPtr(insert(node.getRPtr(), make, model, year));
+
+            }// end else
+
+        }// end insert method
+
+        /*****************************************************************************************************
+         * @name autoCompare
+         * @param node the node that is being compared to the tree
+         * @description function compares the model, year, and make of the node to the
+         *              model, year, and make of the node's parent. If the model, year,
+         *              or make of the node is the same as the model, year, or make of
+         *              the node's parent, then the modelCnt, yearCnt, or makeCnt is
+         *              incremented
+         *****************************************************************************************************/
+        public boolean autoCompare(Node node) {
+
+            boolean exists = false;
+            // if the make already exists in the tree then increment the makeCnt
+            if (node.make == node.getMake()) {
+                SortAutosMN.Tree.Node.makeCnt++;
+
+                // sets exists flag to true do indicate make exists and for calling function to return.
+                exists = true;
+
+            }
+            // if the model already exists in the tree then increment the modelCnt
+            if (node.model == node.getModel()) {
+                SortAutosMN.Tree.Node.modelCnt++;
+            }
+            // if the year already exists in the tree then increment the yearCnt
+            if (node.year == node.getYear()) {
+                SortAutosMN.Tree.Node.yearCnt++;
+            }
+
+            return exists;
+
+        }// end of autoCompare
 
     }// end class Tree
 
