@@ -409,16 +409,65 @@ public class SortAutosMN {
                 }
                 node.setLPtr(insert(node.getLptr(), make, model, year));
             }// end if(make.compareTo(node.getMake()) <= 0)
-            else{
+            else if(make.compareTo(node.getMake()) > 0){
                 // if the make already exists in the tree then increment count of makeCnt, send to compare function
                 if(autoCompare(node)){
                     return node;
                 }
                 node.setRPtr(insert(node.getRPtr(), make, model, year));
-
             }// end else
+            else {
+                return node;
+            }
 
+            // update the height of the nodes of ancestors
+            node.setHeight(1 + root.max(root.height(node.getLptr()), root.height(node.getRPtr())));
+
+            // get the balance factor of the node
+            int balance = balance(node);
+
+            // if the node is unbalanced then there are 4 cases
+
+            // left left case
+            if(balance > 1 && make.compareTo(node.getLptr().getMake()) < 0){
+                return root.rotateRight(node);
+            }// end left left case
+
+            // right right case
+            if(balance < -1 && make.compareTo(node.getRPtr().getMake()) > 0){
+                return root.rotateLeft(node);
+            }// end right right case
+
+            // left right case
+            if(balance > 1 && make.compareTo(node.getLptr().getMake()) > 0){
+                node.setLPtr(root.rotateLeft(node.getLptr()));
+                return root.rotateRight(node);
+            }// end left right case
+
+            // right left case
+            if(balance < -1 && make.compareTo(node.getRPtr().getMake()) < 0){
+                node.setRPtr(root.rotateRight(node.getRPtr()));
+                return root.rotateLeft(node);
+            }// end right left case
+
+            // return the node
+            return node;
+            
         }// end insert method
+
+            /************************************************************************************************
+             * @name inOrderPrint
+             * @param node the node that is being passed in
+             * The function takes a node as a parameter and prints the make and makeCnt of the node and all of its children
+             ************************************************************************************************/
+            public void inOrderPrint(Node node){
+                if(node != null){
+                    inOrderPrint(node.getLptr());
+                    System.out.println(node.getMake() + " " + node.getMakeCnt());
+                    inOrderPrint(node.getRPtr());
+                }// end if
+
+            }// end inOrderPrint
 
         /*****************************************************************************************************
          * @name autoCompare
