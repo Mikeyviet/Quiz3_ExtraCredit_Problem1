@@ -246,7 +246,7 @@ public class SortAutosMN {
              *              parameter.
              ************************************************************************************************/
             public void setLPtr(Node node) {
-                this.lPtr = node.lPtr;
+                this.lPtr = node;
             }// end setLeftPtr method
             
             /************************************************************************************************
@@ -268,7 +268,7 @@ public class SortAutosMN {
              *              to the node passed in as a parameter.
              ************************************************************************************************/
             public void setRPtr(Node node) {
-                this.rPtr = node.rPtr;
+                this.rPtr = node;
             }// end setRPtr method
             
             /************************************************************************************************
@@ -412,68 +412,81 @@ public class SortAutosMN {
          * @return A new node with the car info.
          * @description the function is used to insert the car with info into the tree
          ****************************************************************************************************/
-        public Node insert(Node root, String make, String model, int year) {
+        public Node insert(Node temp, String make, String model, int year) {
 
             
             // check for empty node
             if (root == null) {
-                root = newAvlNode(year, make, model);
+                this.root = newAvlNode(year, make, model);
                 // return new node with car info
-                return root;
+                return this.root;
 
             } // end if
 
             // Start to compare values in the node and traverse down the tree
-            if (make.compareTo(root.getMake()) <= 0) {
+            if (make.compareTo(temp.getMake()) <= 0) {
                 // if the make already exists in the tree then increment count of makeCnt, send
                 // to compare function
-                if (autoCompare(root)) {
-                    return root;
+                if (autoCompare(temp, make, model, year)) {
+                    this.root = temp;
+                    return temp;
                 }
-                root.setLPtr(insert(root.getLPtr(), make, model, year));
+                else if(temp.getLPtr() != null){
+                    insert(temp.getLPtr(), make, model, year);
+                }
+                else{
+                    root.setLPtr(newAvlNode(year, make, model));
+                }
             } // end if(make.compareTo(node.getMake()) <= 0)
             else{
                 // if the make already exists in the tree then increment count of makeCnt, send
                 // to compare function
-                if (autoCompare(root)) {
-                    return root;
+                if (autoCompare(temp, make, model, year)) {
+                    this.root = temp;
+                    return temp;
                 }
-                root.setRPtr(insert(root.getRPtr(), make, model, year));
+                else if(temp.getRPtr() != null){
+                    insert(temp.getRPtr(), make, model, year);
+                }
+                else{
+                    root.setRPtr(newAvlNode(year, make, model));
+                }
             } // end else
           
 
             // update the height of the nodes of ancestors
-            root.setHeight(1 + max(height(root.getLPtr()), height(root.getRPtr())));
+            temp.setHeight(1 + max(height(temp.getLPtr()), height(temp.getRPtr())));
 
             // get the balance factor of the node
-            int balance = balance(root);
+            int balance = balance(temp);
 
             // if the node is unbalanced then there are 4 cases
 
             // left left case
-            if (balance > 1 && make.compareTo(root.getLPtr().getMake()) < 0) {
-                return rotateRight(root);
+            if (balance > 1 && make.compareTo(temp.getLPtr().getMake()) < 0) {
+                return rotateRight(temp);
             } // end left left case
 
             // right right case
-            if (balance < -1 && make.compareTo(root.getRPtr().getMake()) > 0) {
-                return rotateLeft(root);
+            if (balance < -1 && make.compareTo(temp.getRPtr().getMake()) > 0) {
+                return rotateLeft(temp);
             } // end right right case
 
             // left right case
-            if (balance > 1 && make.compareTo(root.getLPtr().getMake()) > 0) {
-                root.setLPtr(rotateLeft(root.getLPtr()));
-                return rotateRight(root);
+            if (balance > 1 && make.compareTo(temp.getLPtr().getMake()) > 0) {
+                temp.setLPtr(rotateLeft(temp.getLPtr()));
+                return rotateRight(temp);
             } // end left right case
 
             // right left case
-            if (balance < -1 && make.compareTo(root.getRPtr().getMake()) < 0) {
-                root.setRPtr(rotateRight(root.getRPtr()));
-                return rotateLeft(root);
+            if (balance < -1 && make.compareTo(temp.getRPtr().getMake()) < 0) {
+                temp.setRPtr(rotateRight(temp.getRPtr()));
+                return rotateLeft(temp);
             } // end right left case
 
             // return the node
-            return root;
+            this.root = temp;
+            return temp;
 
         }// end insert method
 
@@ -483,11 +496,11 @@ public class SortAutosMN {
          *             The function takes a node as a parameter and prints the make and
          *             makeCnt of the node and all of its children
          ************************************************************************************************/
-        public void inOrderPrint(Node root) {
-            if (root != null) {
-                inOrderPrint(root.getLPtr());
-                System.out.println(root.getMake() + " " + root.getMakeCnt());
-                inOrderPrint(root.getRPtr());
+        public void inOrderPrint(Node temp) {
+            if (temp != null) {
+                inOrderPrint(temp.getLPtr());
+                System.out.println(temp.getMake() + " " + temp.getMakeCnt());
+                inOrderPrint(temp.getRPtr());
             } // end if
 
         }// end inOrderPrint
@@ -501,11 +514,11 @@ public class SortAutosMN {
          *              the node's parent, then the modelCnt, yearCnt, or makeCnt is
          *              incremented
          *****************************************************************************************************/
-        public boolean autoCompare(Node node) {
+        public boolean autoCompare(Node node, String make2, String model2, int year2) {
 
             boolean exists = false;
             // if the make already exists in the tree then increment the makeCnt
-            if (node.make == node.getMake()) {
+            if (make2 == node.getMake()) {
                 SortAutosMN.Tree.Node.makeCnt++;
 
                 // sets exists flag to true do indicate make exists and for calling function to
@@ -514,11 +527,11 @@ public class SortAutosMN {
 
             }
             // if the model already exists in the tree then increment the modelCnt
-            if (node.model == node.getModel()) {
+            if (model2 == node.getModel()) {
                 SortAutosMN.Tree.Node.modelCnt++;
             }
             // if the year already exists in the tree then increment the yearCnt
-            if (node.year == node.getYear()) {
+            if (year2 == node.getYear()) {
                 SortAutosMN.Tree.Node.yearCnt++;
             }
 
